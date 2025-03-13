@@ -632,6 +632,7 @@ body.dark-theme .project-content p {
 .skill-tag {
     display: flex;
     align-items: center;
+    
     padding: 8px 15px;
     background-color: var(--accent-color);
     border-radius: 20px;
