@@ -620,3 +620,47 @@ body.dark-theme .project-content p {
         font-size: 2rem;
     }
 }
+
+/* Updated Skills Section Styles */
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+.skill-tag {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    background-color: var(--accent-color);
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.skill-tag:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.skill-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    fill: currentColor;
+}
+
+/* For dark theme compatibility */
+body.dark-theme .skill-icon {
+    filter: brightness(0) invert(1);
+}
+
+body.dark-theme .skill-tag:hover .skill-icon {
+    filter: brightness(1) invert(0);
+}
