@@ -665,3 +665,35 @@ body.dark-theme .skill-icon {
 body.dark-theme .skill-tag:hover .skill-icon {
     filter: brightness(1) invert(0);
 }
+
+
+.social-icons a {
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 24px;
+}
+
+.social-icons a.linkedin {
+    color: #0077B5; /* LinkedIn Blue */
+}
+
+.social-icons a.github {
+    color: #181717; /* GitHub Black */
+}
+
+.social-icons a.twitter {
+    color: #1DA1F2; /* Twitter Blue */
+}
+
+.social-icons a.instagram {
+    color: #E4405F; /* Instagram Gradient */
+}
+
+.social-icons a.gdsc {
+    color: #4285F4; /* Google Blue */
+}
+
+.gdsc-icon {
+    width: 24px;
+    height: 24px;
+}
