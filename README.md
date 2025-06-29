@@ -4,7 +4,7 @@ Welcome to my personal portfolio website! This site showcases my skills, project
 
 ## 🌐 Live Demo
 
-Visit my portfolio: [https://koushik369mondal.github.io/personalPortfolio/](https://koushik369mondal.github.io/personalPortfolio/)
+Visit my portfolio: [Preview](https://koushik369mondal.github.io/personalPortfolio/)
 
 ## 📧 Contact
 
