@@ -110,3 +110,35 @@ document.addEventListener("DOMContentLoaded", () => {
     // Check on scroll
     window.addEventListener("scroll", checkFade);
 });
+
+const form = document.getElementById("contactForm");
+const statusEl = document.getElementById("formStatus");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    statusEl.textContent = "Sending...";
+    const btn = form.querySelector("button[type='submit']");
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { "Accept": "application/json" }
+        });
+
+        if (res.ok) {
+            statusEl.textContent = "✅ Message sent! I’ll get back to you soon.";
+            form.reset();
+        } else {
+            const data = await res.json().catch(() => null);
+            const msg = data?.errors?.map(e => e.message).join(", ") || "❌ Oops! Something went wrong.";
+            statusEl.textContent = msg;
+        }
+    } catch (err) {
+        statusEl.textContent = "⚠️ Network error. Please try again.";
+    } finally {
+        btn.disabled = false;
+    }
+});
