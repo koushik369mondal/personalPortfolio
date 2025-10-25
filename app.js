@@ -278,3 +278,253 @@ filterBtns.forEach(btn => {
         });
     });
 });
+
+// ===================================
+// Chatbot Functionality
+// ===================================
+
+// Chatbot Knowledge Base
+const chatbotData = {
+    "who are you": "I'm Kaushik Mandal, a passionate Web Developer based in India. I specialize in building responsive and visually appealing websites and applications using HTML, CSS, and JavaScript. 🚀",
+
+    "what technologies do you use": "I work with HTML5, CSS3, JavaScript, and I'm currently learning backend technologies and the MERN stack (MongoDB, Express.js, React.js, Node.js) to become a full-stack developer. 💻",
+
+    "can i see your projects": "Absolutely! You can check out my projects section on this website, or visit my GitHub profile. I've built various web applications showcasing my skills in front-end development. 🎨",
+
+    "how can i contact you": "You can reach me through the contact form on this website, email me directly, or connect with me on LinkedIn, GitHub, or Instagram. All my contact details are in the footer section! 📧",
+
+    "what are your interests": "Besides coding, I love exploring new technologies, contributing to open-source projects, and diving into finance and stock market trends. I'm always curious about learning new things! 📚",
+
+    "do you take freelance projects": "Yes! I'm open to freelance web development projects. Feel free to reach out through the contact form or email me directly to discuss your project requirements. 💼",
+
+    "what's your goal": "My goal is to become a proficient full-stack developer and create meaningful digital solutions that solve real-world problems. I'm committed to continuous learning and staying updated with the latest web technologies. 🎯",
+
+    "what are you learning right now": "Currently, I'm focusing on backend technologies and the MERN stack to expand my skill set. I'm also exploring best practices in web performance optimization and modern JavaScript frameworks. 📖",
+
+    "any fun fact": "Fun fact: When I'm not coding, you might find me analyzing stock market trends! I believe the analytical skills from finance complement my problem-solving abilities in programming. 📊🎉"
+};
+
+// All available suggestion questions
+const allSuggestions = [
+    { emoji: "👤", text: "Who are you?", question: "Who are you?" },
+    { emoji: "💻", text: "Your skills?", question: "What technologies do you use?" },
+    { emoji: "🎨", text: "Projects?", question: "Can I see your projects?" },
+    { emoji: "📧", text: "Contact?", question: "How can I contact you?" },
+    { emoji: "💼", text: "Freelance?", question: "Do you take freelance projects?" },
+    { emoji: "🎯", text: "Your goal?", question: "What's your goal?" },
+    { emoji: "📖", text: "Learning?", question: "What are you learning right now?" },
+    { emoji: "📚", text: "Interests?", question: "What are your interests?" },
+    { emoji: "🎉", text: "Fun fact?", question: "Any fun fact?" }
+];
+
+let usedSuggestions = [];
+
+// Get elements
+const toggleBtn = document.getElementById('chatbot-toggle');
+const closeBtn = document.getElementById('chatbot-close');
+const chatWindow = document.getElementById('chatbot-window');
+const messagesContainer = document.getElementById('chatbot-messages');
+const inputField = document.getElementById('chatbot-input');
+const sendBtn = document.getElementById('chatbot-send');
+const suggestionsContainer = document.getElementById('chatbot-suggestions');
+
+// Function to get random suggestions
+function getRandomSuggestions(count = 5) {
+    // Filter out already used suggestions
+    let availableSuggestions = allSuggestions.filter(s =>
+        !usedSuggestions.includes(s.question)
+    );
+
+    // If all used, reset
+    if (availableSuggestions.length < count) {
+        usedSuggestions = [];
+        availableSuggestions = [...allSuggestions];
+    }
+
+    // Shuffle and pick random suggestions
+    const shuffled = availableSuggestions.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
+// Function to update suggestion buttons
+function updateSuggestions() {
+    const suggestions = getRandomSuggestions(2);
+    suggestionsContainer.innerHTML = '';
+
+    suggestions.forEach(suggestion => {
+        const btn = document.createElement('button');
+        btn.className = 'suggestion-btn';
+        btn.setAttribute('data-question', suggestion.question);
+        btn.textContent = `${suggestion.emoji} ${suggestion.text}`;
+
+        btn.addEventListener('click', () => {
+            const question = btn.getAttribute('data-question');
+            inputField.value = question;
+            sendMessage();
+            // Track used suggestion
+            usedSuggestions.push(question);
+        });
+
+        suggestionsContainer.appendChild(btn);
+    });
+}
+
+// Toggle chat window
+toggleBtn.addEventListener('click', () => {
+    if (chatWindow.classList.contains('chatbot-hidden')) {
+        chatWindow.classList.remove('chatbot-hidden');
+        inputField.focus();
+    } else {
+        chatWindow.classList.add('chatbot-hidden');
+    }
+});
+
+closeBtn.addEventListener('click', () => {
+    chatWindow.classList.add('chatbot-hidden');
+});
+
+// Send message function
+function sendMessage() {
+    const userMessage = inputField.value.trim();
+
+    if (!userMessage) return;
+
+    // Add user message
+    addMessage(userMessage, 'user');
+    inputField.value = '';
+
+    // Show typing indicator
+    showTypingIndicator();
+
+    // Get bot response after delay
+    setTimeout(() => {
+        removeTypingIndicator();
+        const botResponse = getBotResponse(userMessage);
+        addMessage(botResponse, 'bot');
+        // Update suggestions after bot response
+        updateSuggestions();
+    }, 800);
+}
+
+// Add message to chat
+function addMessage(text, sender) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = sender === 'user' ? 'user-message' : 'bot-message';
+
+    const bubble = document.createElement('div');
+    bubble.className = sender === 'user' ? 'message-bubble user-bubble' : 'message-bubble bot-bubble';
+    bubble.textContent = text;
+
+    messageDiv.appendChild(bubble);
+    messagesContainer.appendChild(messageDiv);
+
+    // Auto-scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Show typing indicator
+function showTypingIndicator() {
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'bot-message typing-message';
+    typingDiv.innerHTML = `
+        <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+    messagesContainer.appendChild(typingDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Remove typing indicator
+function removeTypingIndicator() {
+    const typingMessage = document.querySelector('.typing-message');
+    if (typingMessage) {
+        typingMessage.remove();
+    }
+}
+
+// Get bot response using keyword matching
+function getBotResponse(userMessage) {
+    const lowercaseMessage = userMessage.toLowerCase();
+
+    // Direct match
+    for (const [question, answer] of Object.entries(chatbotData)) {
+        if (lowercaseMessage.includes(question)) {
+            return answer;
+        }
+    }
+
+    // Keyword-based matching
+    if (lowercaseMessage.includes('name') || lowercaseMessage.includes('introduce')) {
+        return chatbotData["who are you"];
+    }
+
+    if (lowercaseMessage.includes('skill') || lowercaseMessage.includes('tech') || lowercaseMessage.includes('stack')) {
+        return chatbotData["what technologies do you use"];
+    }
+
+    if (lowercaseMessage.includes('project') || lowercaseMessage.includes('work') || lowercaseMessage.includes('portfolio')) {
+        return chatbotData["can i see your projects"];
+    }
+
+    if (lowercaseMessage.includes('contact') || lowercaseMessage.includes('email') || lowercaseMessage.includes('reach')) {
+        return chatbotData["how can i contact you"];
+    }
+
+    if (lowercaseMessage.includes('interest') || lowercaseMessage.includes('hobby') || lowercaseMessage.includes('like')) {
+        return chatbotData["what are your interests"];
+    }
+
+    if (lowercaseMessage.includes('freelance') || lowercaseMessage.includes('hire') || lowercaseMessage.includes('available')) {
+        return chatbotData["do you take freelance projects"];
+    }
+
+    if (lowercaseMessage.includes('goal') || lowercaseMessage.includes('future') || lowercaseMessage.includes('plan')) {
+        return chatbotData["what's your goal"];
+    }
+
+    if (lowercaseMessage.includes('learn') || lowercaseMessage.includes('study') || lowercaseMessage.includes('currently')) {
+        return chatbotData["what are you learning right now"];
+    }
+
+    if (lowercaseMessage.includes('fun') || lowercaseMessage.includes('fact') || lowercaseMessage.includes('interesting')) {
+        return chatbotData["any fun fact"];
+    }
+
+    if (lowercaseMessage.includes('hello') || lowercaseMessage.includes('hi') || lowercaseMessage.includes('hey')) {
+        return "Hello! 👋 I'm here to answer any questions about Kaushik. What would you like to know?";
+    }
+
+    if (lowercaseMessage.includes('thank') || lowercaseMessage.includes('thanks')) {
+        return "You're welcome! Feel free to ask anything else about Kaushik. 😊";
+    }
+
+    if (lowercaseMessage.includes('bye') || lowercaseMessage.includes('goodbye')) {
+        return "Goodbye! Feel free to come back anytime you have questions. Have a great day! 👋";
+    }
+
+    // Default response
+    return "I'm not sure about that. Try asking me about Kaushik's skills, projects, interests, goals, or how to contact him! 🤔";
+}
+
+// Event listeners
+sendBtn.addEventListener('click', sendMessage);
+
+inputField.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+
+// Prevent empty messages
+inputField.addEventListener('input', () => {
+    sendBtn.disabled = !inputField.value.trim();
+});
+
+// Initial state
+sendBtn.disabled = true;
+
+// Initialize suggestions on load
+updateSuggestions();
