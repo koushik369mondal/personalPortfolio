@@ -429,24 +429,222 @@
         </div>
     </footer>
 
-    <!-- Theme Toggle Button -->
-    <!-- <div class="theme-toggle">
-        <i class="fas fa-moon"></i>
-    </div> -->
+    <!-- Custom Chatbot -->
+    <div id="chatbot-container">
+        <!-- Chat Button -->
+        <button id="chatbot-toggle" aria-label="Open Chat">
+            <i class="fas fa-comments"></i>
+        </button>
 
-    <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-        (function () {
-            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-            s1.async = true;
-            s1.src = 'https://embed.tawk.to/6868d4e6d7341f191194943f/1ivcnva4g';
-            s1.charset = 'UTF-8';
-            s1.setAttribute('crossorigin', '*');
-            s0.parentNode.insertBefore(s1, s0);
-        })();
+        <!-- Chat Window -->
+        <div id="chatbot-window" class="chatbot-hidden">
+            <div class="chatbot-header">
+                <div class="chatbot-header-info">
+                    <i class="fas fa-robot"></i>
+                    <span>Kaushik's Assistant</span>
+                </div>
+                <button id="chatbot-close" aria-label="Close Chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chatbot-messages" class="chatbot-messages">
+                <div class="bot-message">
+                    <div class="message-bubble bot-bubble">
+                        👋 Hi! I'm Kaushik's virtual assistant. Ask me anything about Kaushik!
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input-area">
+                <input type="text" id="chatbot-input" placeholder="Type your message..." />
+                <button id="chatbot-send" aria-label="Send Message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot Script -->
+    <script>
+        // Chatbot Knowledge Base
+        const chatbotData = {
+            "who are you": "I'm Kaushik Mandal, a passionate Web Developer based in India. I specialize in building responsive and visually appealing websites and applications using HTML, CSS, and JavaScript. 🚀",
+
+            "what technologies do you use": "I work with HTML5, CSS3, JavaScript, and I'm currently learning backend technologies and the MERN stack (MongoDB, Express.js, React.js, Node.js) to become a full-stack developer. 💻",
+
+            "can i see your projects": "Absolutely! You can check out my projects section on this website, or visit my GitHub profile. I've built various web applications showcasing my skills in front-end development. 🎨",
+
+            "how can i contact you": "You can reach me through the contact form on this website, email me directly, or connect with me on LinkedIn, GitHub, or Instagram. All my contact details are in the footer section! 📧",
+
+            "what are your interests": "Besides coding, I love exploring new technologies, contributing to open-source projects, and diving into finance and stock market trends. I'm always curious about learning new things! 📚",
+
+            "do you take freelance projects": "Yes! I'm open to freelance web development projects. Feel free to reach out through the contact form or email me directly to discuss your project requirements. 💼",
+
+            "what's your goal": "My goal is to become a proficient full-stack developer and create meaningful digital solutions that solve real-world problems. I'm committed to continuous learning and staying updated with the latest web technologies. 🎯",
+
+            "what are you learning right now": "Currently, I'm focusing on backend technologies and the MERN stack to expand my skill set. I'm also exploring best practices in web performance optimization and modern JavaScript frameworks. 📖",
+
+            "any fun fact": "Fun fact: When I'm not coding, you might find me analyzing stock market trends! I believe the analytical skills from finance complement my problem-solving abilities in programming. 📊🎉"
+        };
+
+        // Get elements
+        const toggleBtn = document.getElementById('chatbot-toggle');
+        const closeBtn = document.getElementById('chatbot-close');
+        const chatWindow = document.getElementById('chatbot-window');
+        const messagesContainer = document.getElementById('chatbot-messages');
+        const inputField = document.getElementById('chatbot-input');
+        const sendBtn = document.getElementById('chatbot-send');
+
+        // Toggle chat window
+        toggleBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('chatbot-hidden');
+            inputField.focus();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            chatWindow.classList.add('chatbot-hidden');
+        });
+
+        // Send message function
+        function sendMessage() {
+            const userMessage = inputField.value.trim();
+
+            if (!userMessage) return;
+
+            // Add user message
+            addMessage(userMessage, 'user');
+            inputField.value = '';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Get bot response after delay
+            setTimeout(() => {
+                removeTypingIndicator();
+                const botResponse = getBotResponse(userMessage);
+                addMessage(botResponse, 'bot');
+            }, 800);
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender === 'user' ? 'user-message' : 'bot-message';
+
+            const bubble = document.createElement('div');
+            bubble.className = sender === 'user' ? 'message-bubble user-bubble' : 'message-bubble bot-bubble';
+            bubble.textContent = text;
+
+            messageDiv.appendChild(bubble);
+            messagesContainer.appendChild(messageDiv);
+
+            // Auto-scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'bot-message typing-message';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingMessage = document.querySelector('.typing-message');
+            if (typingMessage) {
+                typingMessage.remove();
+            }
+        }
+
+        // Get bot response using keyword matching
+        function getBotResponse(userMessage) {
+            const lowercaseMessage = userMessage.toLowerCase();
+
+            // Direct match
+            for (const [question, answer] of Object.entries(chatbotData)) {
+                if (lowercaseMessage.includes(question)) {
+                    return answer;
+                }
+            }
+
+            // Keyword-based matching
+            if (lowercaseMessage.includes('name') || lowercaseMessage.includes('introduce')) {
+                return chatbotData["who are you"];
+            }
+
+            if (lowercaseMessage.includes('skill') || lowercaseMessage.includes('tech') || lowercaseMessage.includes('stack')) {
+                return chatbotData["what technologies do you use"];
+            }
+
+            if (lowercaseMessage.includes('project') || lowercaseMessage.includes('work') || lowercaseMessage.includes('portfolio')) {
+                return chatbotData["can i see your projects"];
+            }
+
+            if (lowercaseMessage.includes('contact') || lowercaseMessage.includes('email') || lowercaseMessage.includes('reach')) {
+                return chatbotData["how can i contact you"];
+            }
+
+            if (lowercaseMessage.includes('interest') || lowercaseMessage.includes('hobby') || lowercaseMessage.includes('like')) {
+                return chatbotData["what are your interests"];
+            }
+
+            if (lowercaseMessage.includes('freelance') || lowercaseMessage.includes('hire') || lowercaseMessage.includes('available')) {
+                return chatbotData["do you take freelance projects"];
+            }
+
+            if (lowercaseMessage.includes('goal') || lowercaseMessage.includes('future') || lowercaseMessage.includes('plan')) {
+                return chatbotData["what's your goal"];
+            }
+
+            if (lowercaseMessage.includes('learn') || lowercaseMessage.includes('study') || lowercaseMessage.includes('currently')) {
+                return chatbotData["what are you learning right now"];
+            }
+
+            if (lowercaseMessage.includes('fun') || lowercaseMessage.includes('fact') || lowercaseMessage.includes('interesting')) {
+                return chatbotData["any fun fact"];
+            }
+
+            if (lowercaseMessage.includes('hello') || lowercaseMessage.includes('hi') || lowercaseMessage.includes('hey')) {
+                return "Hello! 👋 I'm here to answer any questions about Kaushik. What would you like to know?";
+            }
+
+            if (lowercaseMessage.includes('thank') || lowercaseMessage.includes('thanks')) {
+                return "You're welcome! Feel free to ask anything else about Kaushik. 😊";
+            }
+
+            if (lowercaseMessage.includes('bye') || lowercaseMessage.includes('goodbye')) {
+                return "Goodbye! Feel free to come back anytime you have questions. Have a great day! 👋";
+            }
+
+            // Default response
+            return "I'm not sure about that. Try asking me about Kaushik's skills, projects, interests, goals, or how to contact him! 🤔";
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Prevent empty messages
+        inputField.addEventListener('input', () => {
+            sendBtn.disabled = !inputField.value.trim();
+        });
+
+        // Initial state
+        sendBtn.disabled = true;
     </script>
-    <!--End of Tawk.to Script-->
 
     <!-- JavaScript -->
     <script src="app.js"></script>
