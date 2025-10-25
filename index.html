@@ -454,6 +454,9 @@
                     </div>
                 </div>
             </div>
+            <div id="chatbot-suggestions" class="chatbot-suggestions">
+                <!-- Suggestions will be dynamically generated -->
+            </div>
             <div class="chatbot-input-area">
                 <input type="text" id="chatbot-input" placeholder="Type your message..." />
                 <button id="chatbot-send" aria-label="Send Message">
@@ -486,6 +489,21 @@
             "any fun fact": "Fun fact: When I'm not coding, you might find me analyzing stock market trends! I believe the analytical skills from finance complement my problem-solving abilities in programming. 📊🎉"
         };
 
+        // All available suggestion questions
+        const allSuggestions = [
+            { emoji: "👤", text: "Who are you?", question: "Who are you?" },
+            { emoji: "💻", text: "Your skills?", question: "What technologies do you use?" },
+            { emoji: "🎨", text: "Projects?", question: "Can I see your projects?" },
+            { emoji: "📧", text: "Contact?", question: "How can I contact you?" },
+            { emoji: "💼", text: "Freelance?", question: "Do you take freelance projects?" },
+            { emoji: "🎯", text: "Your goal?", question: "What's your goal?" },
+            { emoji: "📖", text: "Learning?", question: "What are you learning right now?" },
+            { emoji: "📚", text: "Interests?", question: "What are your interests?" },
+            { emoji: "🎉", text: "Fun fact?", question: "Any fun fact?" }
+        ];
+
+        let usedSuggestions = [];
+
         // Get elements
         const toggleBtn = document.getElementById('chatbot-toggle');
         const closeBtn = document.getElementById('chatbot-close');
@@ -493,6 +511,48 @@
         const messagesContainer = document.getElementById('chatbot-messages');
         const inputField = document.getElementById('chatbot-input');
         const sendBtn = document.getElementById('chatbot-send');
+        const suggestionsContainer = document.getElementById('chatbot-suggestions');
+
+        // Function to get random suggestions
+        function getRandomSuggestions(count = 5) {
+            // Filter out already used suggestions
+            let availableSuggestions = allSuggestions.filter(s =>
+                !usedSuggestions.includes(s.question)
+            );
+
+            // If all used, reset
+            if (availableSuggestions.length < count) {
+                usedSuggestions = [];
+                availableSuggestions = [...allSuggestions];
+            }
+
+            // Shuffle and pick random suggestions
+            const shuffled = availableSuggestions.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        // Function to update suggestion buttons
+        function updateSuggestions() {
+            const suggestions = getRandomSuggestions(2);
+            suggestionsContainer.innerHTML = '';
+
+            suggestions.forEach(suggestion => {
+                const btn = document.createElement('button');
+                btn.className = 'suggestion-btn';
+                btn.setAttribute('data-question', suggestion.question);
+                btn.textContent = `${suggestion.emoji} ${suggestion.text}`;
+
+                btn.addEventListener('click', () => {
+                    const question = btn.getAttribute('data-question');
+                    inputField.value = question;
+                    sendMessage();
+                    // Track used suggestion
+                    usedSuggestions.push(question);
+                });
+
+                suggestionsContainer.appendChild(btn);
+            });
+        }
 
         // Toggle chat window
         toggleBtn.addEventListener('click', () => {
@@ -522,6 +582,8 @@
                 removeTypingIndicator();
                 const botResponse = getBotResponse(userMessage);
                 addMessage(botResponse, 'bot');
+                // Update suggestions after bot response
+                updateSuggestions();
             }, 800);
         }
 
@@ -644,6 +706,9 @@
 
         // Initial state
         sendBtn.disabled = true;
+
+        // Initialize suggestions on load
+        updateSuggestions();
     </script>
 
     <!-- JavaScript -->

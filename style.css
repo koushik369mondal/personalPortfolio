@@ -1271,6 +1271,49 @@ body.dark-theme .skill-tag:hover .skill-icon {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+.chatbot-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+    animation: fadeInSuggestions 0.5s ease;
+}
+
+@keyframes fadeInSuggestions {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.suggestion-btn {
+    background: var(--white);
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #555;
+    font-family: 'Poppins', sans-serif;
+    white-space: nowrap;
+}
+
+.suggestion-btn:hover {
+    background: linear-gradient(135deg, #5d3fd3, #8b5cf6);
+    color: var(--white);
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(93, 63, 211, 0.3);
+}
+
 .chatbot-input-area {
     display: flex;
     padding: 15px 20px;
@@ -1377,5 +1420,10 @@ body.dark-theme .skill-tag:hover .skill-icon {
     .message-bubble {
         max-width: 85%;
         font-size: 13px;
+    }
+
+    .suggestion-btn {
+        font-size: 12px;
+        padding: 7px 12px;
     }
 }
