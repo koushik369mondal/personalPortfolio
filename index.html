@@ -556,8 +556,12 @@
 
         // Toggle chat window
         toggleBtn.addEventListener('click', () => {
-            chatWindow.classList.remove('chatbot-hidden');
-            inputField.focus();
+            if (chatWindow.classList.contains('chatbot-hidden')) {
+                chatWindow.classList.remove('chatbot-hidden');
+                inputField.focus();
+            } else {
+                chatWindow.classList.add('chatbot-hidden');
+            }
         });
 
         closeBtn.addEventListener('click', () => {
