@@ -418,28 +418,61 @@ textarea.form-control {
 
 /* Footer */
 footer {
-    background-color: var(--secondary-color);
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #1a1a1a 100%);
     color: var(--white);
-    padding: 40px 0;
-    text-align: center;
+    padding: 60px 0 20px;
 }
 
 .footer-content {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 100%;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-col h4 {
+    color: var(--white);
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-col h4::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.footer-desc {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 15px 0 20px;
+    line-height: 1.8;
 }
 
 .footer-logo {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     color: var(--white);
+    background: linear-gradient(90deg, var(--primary-color), #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .footer-social {
     display: flex;
-    justify-content: center;
-    margin: 20px 0;
+    gap: 12px;
+    margin-top: 15px;
 }
 
 .footer-social a {
@@ -449,37 +482,143 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 10px;
     background-color: rgba(255, 255, 255, 0.1);
     color: var(--white);
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-social a:hover {
     background-color: var(--primary-color);
     transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 5px 15px rgba(93, 63, 211, 0.4);
 }
 
 .footer-links {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
 }
 
 .footer-links a {
-    margin: 0 15px;
-    color: var(--white);
-    transition: color 0.3s;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
+}
+
+.footer-links a::before {
+    content: '▸';
+    margin-right: 8px;
+    color: var(--primary-color);
+    transition: margin-right 0.3s ease;
 }
 
 .footer-links a:hover {
+    color: var(--white);
+    margin-left: 5px;
+}
+
+.footer-links a:hover::before {
+    margin-right: 12px;
+}
+
+.footer-contact {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-contact li {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.footer-contact li i {
     color: var(--primary-color);
+    font-size: 1rem;
+    margin-top: 3px;
+    min-width: 20px;
+}
+
+.footer-contact a {
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.3s ease;
+}
+
+.footer-contact a:hover {
+    color: var(--white);
+}
+
+.footer-contact span {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .footer-bottom {
-    padding-top: 20px;
+    padding-top: 30px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     margin-top: 20px;
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: rgba(255, 255, 255, 0.6);
+    margin: 8px 0;
+    font-size: 0.95rem;
+}
+
+.footer-tagline {
+    margin-top: 10px;
+}
+
+.footer-tagline i {
+    color: #ff6b6b;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.footer-tagline .fa-code {
+    color: var(--primary-color);
+    animation: none;
+}
+
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.2);
+    }
+    50% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .footer-col h4::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .footer-social {
+        justify-content: center;
+    }
+
+    .footer-contact li {
+        justify-content: center;
+    }
 }
 
 /* Theme Toggle */
