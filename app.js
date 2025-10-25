@@ -1,4 +1,73 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Typing Effect
+    const typedTextSpan = document.querySelector(".typed-text");
+    const textArray = ["Web Developer", "Frontend Designer", "MERN Stack Learner", "Finance Enthusiast"];
+    const typingDelay = 100;
+    const erasingDelay = 50;
+    const newTextDelay = 2000;
+    let textArrayIndex = 0;
+    let charIndex = 0;
+
+    function type() {
+        if (charIndex < textArray[textArrayIndex].length) {
+            typedTextSpan.textContent += textArray[textArrayIndex].charAt(charIndex);
+            charIndex++;
+            setTimeout(type, typingDelay);
+        } else {
+            setTimeout(erase, newTextDelay);
+        }
+    }
+
+    function erase() {
+        if (charIndex > 0) {
+            typedTextSpan.textContent = textArray[textArrayIndex].substring(0, charIndex - 1);
+            charIndex--;
+            setTimeout(erase, erasingDelay);
+        } else {
+            textArrayIndex++;
+            if (textArrayIndex >= textArray.length) textArrayIndex = 0;
+            setTimeout(type, typingDelay + 1100);
+        }
+    }
+
+    if (typedTextSpan) {
+        setTimeout(type, newTextDelay + 250);
+    }
+
+    // Counter Animation
+    const counters = document.querySelectorAll('.stat-number');
+    const speed = 200;
+
+    const countUp = () => {
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-count');
+            const count = +counter.innerText;
+            const inc = target / speed;
+
+            if (count < target) {
+                counter.innerText = Math.ceil(count + inc);
+                setTimeout(() => countUp(), 1);
+            } else {
+                counter.innerText = target;
+            }
+        });
+    };
+
+    // Intersection Observer for counter animation
+    const statsSection = document.querySelector('.hero-stats');
+    if (statsSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    countUp();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(statsSection);
+    }
+
     // Navbar scroll effect
     const header = document.querySelector("header");
 
