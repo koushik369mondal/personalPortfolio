@@ -285,14 +285,14 @@ nav {
 
 .about-content {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
+    grid-template-columns: 1fr 1fr;
     gap: 60px;
     align-items: center;
 }
 
 .about-image img {
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     border-radius: 15px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease;
