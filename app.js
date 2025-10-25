@@ -231,7 +231,7 @@ form.addEventListener("submit", async (e) => {
         });
 
         if (res.ok) {
-            statusEl.textContent = "✅ Message sent! I’ll get back to you soon.";
+            statusEl.textContent = "✅ Message sent! I'll get back to you soon.";
             form.reset();
         } else {
             const data = await res.json().catch(() => null);
@@ -243,4 +243,38 @@ form.addEventListener("submit", async (e) => {
     } finally {
         btn.disabled = false;
     }
+});
+
+// Project filtering functionality
+const filterBtns = document.querySelectorAll('.filter-btn');
+const projectCards = document.querySelectorAll('.project-card');
+
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Remove active class from all buttons
+        filterBtns.forEach(b => b.classList.remove('active'));
+        // Add active class to clicked button
+        btn.classList.add('active');
+
+        const filterValue = btn.getAttribute('data-filter');
+
+        projectCards.forEach(card => {
+            if (filterValue === 'all') {
+                card.classList.remove('hidden');
+                setTimeout(() => {
+                    card.style.animation = 'fadeInUp 0.5s ease';
+                }, 100);
+            } else {
+                const categories = card.getAttribute('data-category');
+                if (categories.includes(filterValue)) {
+                    card.classList.remove('hidden');
+                    setTimeout(() => {
+                        card.style.animation = 'fadeInUp 0.5s ease';
+                    }, 100);
+                } else {
+                    card.classList.add('hidden');
+                }
+            }
+        });
+    });
 });
